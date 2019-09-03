@@ -1,27 +1,26 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
+import { useFetch } from "./hook";
 import ReactDOM from "react-dom";
-import axios from "axios";
 import "./styles.css";
 
 function App() {
-  const [data, setData] = useState({ shipList: [] });
-
-  useEffect(() => {
-    const fetchShips = async () => {
-      const result = await axios("https://swapi.co/api/starships");
-      setData(result.data);
-    };
-    fetchShips();
-  });
+  const [data, loading] = useFetch("https://swapi.co/api/starships/9/");
 
   return (
-    <ul>
-      {data.shipList.map(ship => (
-        <li key={ship.created}>
-          <p>{ship.name}</p>
-        </li>
-      ))}
-    </ul>
+    <>
+      <h1>Ships</h1>
+      {loading ? (
+        "Loading..."
+      ) : (
+        <ul>
+          {data.results.map(ship => (
+            <li>
+              <p>{ship.name}</p>
+            </li>
+          ))}
+        </ul>
+      )}
+    </>
   );
 }
 
